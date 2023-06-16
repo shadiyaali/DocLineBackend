@@ -211,8 +211,15 @@ CORS_ALLOW_ALL_HEADERS = True
 CORS_ALLOW_ALL_METHODS = True
 
 
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = ' shadiyackn@gmail.com'
+# EMAIL_HOST_PASSWORD = 'qxaptlqmfsxgfbcz'
+# EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = ' shadiyackn@gmail.com'
-EMAIL_HOST_PASSWORD = 'qxaptlqmfsxgfbcz'
+EMAIL_HOST_USER = 'shadiyackn@gmail.com'
+EMAIL_HOST_PASSWORD =  'qxaptlqmfsxgfbcz'
 EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'shadiyackn@gmail.com'
