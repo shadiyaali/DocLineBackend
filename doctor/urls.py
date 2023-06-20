@@ -9,12 +9,20 @@ urlpatterns = [
     path('departments/', views.DepartmentListView.as_view(), name="departments"),
     path('homelistdoctor/', views.HomeListDoctor.as_view(), name="homelistdoctor"),
     path('homelistdepartment/', views.HomeListDepartment.as_view(), name="homelistdepartment"),
-    path('sheduleappointment/', views.SlotCreateAPIView.as_view(), name='sheduleappointment'),
+   path('scheduleappointment/', views.SlotCreateAPIView.as_view(), name='scheduleappointment'),
+
     path('viewDoctorRequest/<int:id>/', views.viewDoctorRequestView.as_view(), name='viewDoctorRequest'),
     path('docorsUserSide/', views.UsersDoctorsView.as_view(), name='docorsUserSide'),
     path('getDoctorHome/<int:id>/', views.getDoctorInHome.as_view(), name='getDoctorHome'),
-    path('getSlotsHome/<int:id>/', views.GetSlotsInHome.as_view(), name='getSlotsHome'),
+    
+
+
     path('users/',views.UsersListView.as_view(), name='user-list'),
+
     path('doctors/',views.doctorsListView.as_view(),name='doctorsList'),
-    path('blockdoctor/<int:id>/',views.blockDoctors.as_view(),name='blockdoctors'),
+    path('blockdoctor/<int:id>/',views.BlockDoctor.as_view(),name='blockdoctors'),
+    path('doctorsRequest/',views.DoctorsRequestsView.as_view(),name='doctorsRequest'),
+    path('acceptdoctor/<int:id>/', views.AcceptDoctor.as_view(), name='acceptdoctor'),
+    path('rejectdoctor/<int:id>/', views.RejectDoctor.as_view(), name='rejectdoctor'),
+
 ]

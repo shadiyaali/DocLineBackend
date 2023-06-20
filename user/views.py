@@ -163,8 +163,15 @@ class BlockUser(APIView):
             user = get_user_model().objects.get(id=id)
             user.is_active = not user.is_active
             user.save()
-            return Response({'msg': "Blocked successfully"})
+            if user.is_active:
+                msg = "Blocked successfully"
+            else:
+                msg = "Unblocked successfully"
+            return Response({'msg': msg})
         except get_user_model().DoesNotExist:
-            return Response({'msg': "User not found"})
+            return Response({'msg': "User not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({'msg': str(e)})
+            return Response({'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
