@@ -9,12 +9,13 @@ urlpatterns = [
     path('departments/', views.DepartmentListView.as_view(), name="departments"),
     path('homelistdoctor/', views.HomeListDoctor.as_view(), name="homelistdoctor"),
     path('homelistdepartment/', views.HomeListDepartment.as_view(), name="homelistdepartment"),
-   path('scheduleappointment/', views.SlotCreateAPIView.as_view(), name='scheduleappointment'),
-
+    path('scheduleappointment/', views.SlotCreateAPIView.as_view(), name='scheduleappointment'),
+    path('appointments/',views.AppointmentListAPIView.as_view(),name="appointments"),
     path('viewDoctorRequest/<int:id>/', views.viewDoctorRequestView.as_view(), name='viewDoctorRequest'),
     path('docorsUserSide/', views.UsersDoctorsView.as_view(), name='docorsUserSide'),
-    path('getDoctorHome/<int:id>/', views.getDoctorInHome.as_view(), name='getDoctorHome'),
-    
+    path('getDoctorUser/<int:id>/', views.GetDoctorUser.as_view(), name='getDoctorUser'),
+    path('getSlotsUser/<int:id>/',views.GetSlotsUser.as_view(),name='getSlotsUser'),
+
 
 
     path('users/',views.UsersListView.as_view(), name='user-list'),

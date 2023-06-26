@@ -3,7 +3,7 @@ from user.serializers import UserSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import (  DepartmentSerializers, PostDoctorSerializers,
+from .serializers import (  DepartmentSerializers, PostDoctorSerializers,Appointmentserializer,
                           DoctorsSerializers, SlotSerializer, PostSlotSerializer)
 from .models import Department, Doctors
 from rest_framework.decorators import api_view
@@ -12,7 +12,7 @@ from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
 from .serializers import PostDoctorSerializers
-from .models import Doctors, Slots 
+from .models import Doctors, Slots ,Appointment
 import datetime
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
@@ -97,17 +97,7 @@ class UsersDoctorsView(ListAPIView):
         return Doctors.objects.filter(is_approved=True)
     
 
-class getDoctorInHome(APIView):
-    def get(self,request,id):
-        try:
-            doctor = Doctors.objects.get(id=id).orderby('id')
-            serializer = DoctorsSerializers(doctor, many=False)
-            return Response(serializer.data)
-        except Doctors.DoesNotExist:
-            return Response({'msg': 'Doctor not found'})
-        except Exception as e:
-            return Response({'msg': str(e)})
- 
+
         
 
 class UsersListView(ListAPIView):
@@ -160,7 +150,12 @@ class AcceptDoctor(APIView):
 
         # Update doctor's approval status and set them as staff
         doctor.is_approved = True
-        doctor.user.is_staff = True
+        email = doctor.user.email
+
+        user_data = User.objects.get(email=email)
+        user_data.is_staff = True
+        user_data.save
+        print(user_data)
         doctor.save()
 
         # Send email to the doctor
@@ -238,3 +233,30 @@ class SlotCreateAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class GetDoctorUser(APIView):
+    def get(self,request,id):
+        try:
+            doctor = Doctors.objects.get(id=id)
+            print(doctor)
+            serializer = DoctorsSerializers(doctor, many=False)
+            return Response(serializer.data)
+        except Doctors.DoesNotExist:
+            return Response({'msg': 'Doctor not found'})
+        except Exception as e:
+            return Response({'msg': str(e)})
+
+class GetSlotsUser(APIView):
+    def get(self,request,id):
+        print(id)
+        slot = Slots.objects.filter(doctor=id)
+        serializer = SlotSerializer(slot,many=True)
+
+        return Response(serializer.data)
+
+
+class AppointmentListAPIView(APIView):
+    def get(self, request):
+        appointments = Appointment.objects.all()
+        serializer = Appointmentserializer(appointments, many=True)
+        return Response(serializer.data)

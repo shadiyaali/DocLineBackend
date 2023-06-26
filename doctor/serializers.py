@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from . models import  Department,Doctors
 from user. serializers import UserSerializer
-from . models import Slots,Department,Doctors
+from . models import Slots,Department,Doctors,Appointment
 
 
 
@@ -41,5 +41,11 @@ class PostSlotSerializer(serializers.ModelSerializer):
         exclude = ('is_booked',)  # Exclude the 'is_booked' field during creation
 
 
-
+class Appointmentserializer(serializers.ModelSerializer):
+     patient = UserSerializer()
+     doctor = DoctorsSerializers()
+     slot = SlotSerializer()
+     class Meta:
+          model = Appointment
+          fields = '__all__'
  

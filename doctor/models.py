@@ -36,5 +36,17 @@ class Slots(models.Model):
     is_booked = models.BooleanField(default=False)
     
 
+class Appointment(models.Model):
+    patient = models.ForeignKey(User,on_delete=models.CASCADE,limit_choices_to={'is_active':True,'is_staff':False,'is_superadmin':False})
+    doctor = models.ForeignKey(Doctors,on_delete=models.CASCADE,limit_choices_to={'is_active':True,'is_staff':True,'is_superadmin':False})
+    STATUS_CHOICES = (
+
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('complete', 'Complete'),
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    slot = models.ForeignKey(Slots,on_delete=models.CASCADE)
+
  
      
