@@ -3,7 +3,7 @@ from user.serializers import UserSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import (  DepartmentSerializers, PostDoctorSerializers,Appointmentserializer,
+from .serializers import (  DepartmentSerializers, PostDoctorSerializers,AppointmentSerializer,
                           DoctorsSerializers, SlotSerializer, PostSlotSerializer)
 from .models import Department, Doctors
 from rest_framework.decorators import api_view
@@ -19,7 +19,10 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-
+from rest_framework import generics
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+from rest_framework.generics import UpdateAPIView
  
 
  
@@ -54,15 +57,35 @@ class DepartmentListView(APIView):
         serializer_class = DepartmentSerializers(departments,many =True)
         print(departments)
         return Response(serializer_class.data)  
+ 
 
-@api_view(['POST'])
-def createDepartment(request):
-    serializer = DepartmentSerializers(data=request.data)
-    print(serializer,'gshiguiuhsuidh')
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)  
+ 
+
+class CreateDepartmentView(APIView):
+    def post(self, request):
+        serializer = DepartmentSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ 
+
+class DepartmentUpdateView(UpdateAPIView):
+    serializer_class = DepartmentSerializers
+    queryset = Department.objects.all()
+
+
+
+
+class DepartmentDeleteView(APIView):
+    def delete(self, request, pk):
+        department = get_object_or_404(Department, pk=pk)
+        department.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+ 
+ 
 
 class HomeListDoctor(APIView):
     def get(self, request):
@@ -154,7 +177,7 @@ class AcceptDoctor(APIView):
 
         user_data = User.objects.get(email=email)
         user_data.is_staff = True
-        user_data.save
+        user_data.save()
         print(user_data)
         doctor.save()
 
@@ -211,6 +234,17 @@ class SlotCreateAPIView(APIView):
             end_time = serializer.validated_data['end_time']
             slot_duration = int(serializer.validated_data['slot_duration'])
             
+
+            overlapping_slots = Slots.objects.filter(
+                Q(date=date) & (
+                    Q(start_time__lt=start_time, end_time__gt=start_time) |
+                    Q(start_time__lt=end_time, end_time__gt=end_time) |
+                    Q(start_time__gte=start_time, end_time__lte=end_time)
+                )
+            )
+
+            if overlapping_slots.exists():
+                return Response({'error': 'Slot overlaps with existing slots'}, status=status.HTTP_400_BAD_REQUEST)
             # Slot creation logic
             # Adjust the code below as per your requirements
             slots = []
@@ -249,14 +283,34 @@ class GetDoctorUser(APIView):
 class GetSlotsUser(APIView):
     def get(self,request,id):
         print(id)
-        slot = Slots.objects.filter(doctor=id)
+        slot = Slots.objects.filter(doctor=id,is_booked=False)
         serializer = SlotSerializer(slot,many=True)
 
         return Response(serializer.data)
+
+ 
+
 
 
 class AppointmentListAPIView(APIView):
     def get(self, request):
         appointments = Appointment.objects.all()
-        serializer = Appointmentserializer(appointments, many=True)
+        serializer = AppointmentSerializer(appointments, many=True)
         return Response(serializer.data)
+
+
+
+
+class UpdateAppointmentStatusAPIView(APIView):
+    def patch(self, request, appointment_id):
+        try:
+            appointment = Appointment.objects.get(id=appointment_id)
+        except Appointment.DoesNotExist:
+            return Response({'msg': 'Appointment not found'}, status=404)
+
+        appointment.status = 'completed'
+        appointment.save()
+
+        return Response({'msg': 'Appointment status updated successfully'})
+
+   

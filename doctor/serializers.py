@@ -41,7 +41,7 @@ class PostSlotSerializer(serializers.ModelSerializer):
         exclude = ('is_booked',)  # Exclude the 'is_booked' field during creation
 
 
-class Appointmentserializer(serializers.ModelSerializer):
+class AppointmentSerializer(serializers.ModelSerializer):
      patient = UserSerializer()
      doctor = DoctorsSerializers()
      slot = SlotSerializer()

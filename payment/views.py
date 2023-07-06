@@ -4,7 +4,8 @@ import environ
 import razorpay
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from doctor.models import Slots,Appointment,Doctors
+from user.models import User
 from .models import Order
 from .serializers import OrderSerializer
 
@@ -26,8 +27,11 @@ def start_payment(request):
     fee = request.data['fee']
     slot = request.data['slot']
 
-    # setup razorpay client this is the client to whome user is paying money that's you
-    client = razorpay.Client(auth=(env('PUBLIC_KEY'), env('SECRET_KEY')))
+    PUBLIC_KEY= 'rzp_test_GdyTApPzGf7gjR'
+    SECRET_KEY='41dWu1DxxgUzZhn77Q5itEal'
+
+
+    client = razorpay.Client(auth=(PUBLIC_KEY, SECRET_KEY))
 
     # create razorpay order
     # the amount will come in 'paise' that means if we pass 50 amount will become
@@ -65,6 +69,13 @@ def start_payment(request):
 def handle_payment_success(request):
     # request.data is coming from frontend
     res = json.loads(request.data["response"])
+    slot = json.loads(request.data["slot"])
+    user = json.loads(request.data["user"])
+
+    current_user = User.objects.get(id=user)
+
+    current_slot = Slots.objects.get(id=slot)
+    print(current_slot)
 
     """res will be:
     {'razorpay_payment_id': 'pay_G3NivgSZLx7I9e', 
@@ -106,16 +117,42 @@ def handle_payment_success(request):
     # razorpay client if it is "valid" then check will return None
     check = client.utility.verify_payment_signature(data)
 
-    if check is not None:
-        print("Redirect to error url or error page")
-        return Response({'error': 'Something went wrong'})
+    # if check is not None:
+    #     print("Redirect to error url or error page")
+    #     return Response({'error': 'Something went wrong'})
 
     # if payment is successful that means check is None then we will turn isPaid=True
     order.isPaid = True
     order.save()
+ 
+
+    order.slot = current_slot
+    order.save()
+
+    current_slot = Slots.objects.get(id=slot)
+
+
+    # user = current_slot.doctor.user
+
+    doctor = current_slot.doctor
+    temp = User.objects.get(email=doctor)
+    current_doctor = Doctors.objects.get(user=temp)
+
+    appointment = Appointment.objects.create(
+        patient=current_user,
+        doctor=current_doctor,
+        slot=current_slot,
+        status='pending'
+    )
+
+    
+    current_slot.is_booked = True
+    current_slot.save()
+
+     
 
     res_data = {
-        'message': 'payment successfully received!'
+        'message': 'payment successfully received! Appointment created'
     }
 
     return Response(res_data)
