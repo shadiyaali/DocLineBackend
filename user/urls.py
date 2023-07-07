@@ -17,8 +17,8 @@ urlpatterns = [
     path('forgot_password/', views.ForgotPasswordView.as_view(), name='forgot_password'),
     path('resetPassword_validate/<uidb64>/<token>/',views.resetPassword_validate,name='resetPassword_validate'),
     path('resetPassword/',views.ResetPasswordView.as_view(), name='reset_password'),
+    path('updateUser/<int:pk>/', views.UserUpdateView.as_view(), name='update-user'),
 
-
-    
+    path('getSingleUser/<int:id>/',views.getSingleUser.as_view(),name='getDoctorInHome'),
     path('blockuser/<int:id>/',views.BlockUser.as_view(),name="blockuser") 
 ]

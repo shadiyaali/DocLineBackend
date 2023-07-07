@@ -9,6 +9,7 @@ from rest_framework.generics import ListAPIView
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer 
+from doctor.serializers import AppointmentSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
@@ -16,8 +17,9 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from user.models import User
+from doctor.models import Appointment
 from django.http import HttpResponseRedirect
- 
+from rest_framework.generics import UpdateAPIView 
 
 
 
@@ -174,4 +176,28 @@ class BlockUser(APIView):
             return Response({'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class getSingleUser(APIView):
+    def get(self,request, id):
+        try:
+            user = User.objects.get(id=id)
+            serializer = UserSerializer(user, many=False)
+            appointment = Appointment.objects.filter(patient=id)
+            if appointment :
+                appointment_serializer = AppointmentSerializer(appointment,many=True)
+                return Response({'appointment':appointment_serializer.data,'userDetails':serializer.data})
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response({'msg': 'Doctor not found'})
+        except Exception as e:
+            return Response({'msg': str(e)})
 
+class UserUpdateView(UpdateAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
