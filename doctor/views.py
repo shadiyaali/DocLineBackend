@@ -294,6 +294,7 @@ class GetSlotsUser(APIView):
 
 class AppointmentListAPIView(APIView):
     def get(self, request):
+        
         appointments = Appointment.objects.all()
         serializer = AppointmentSerializer(appointments, many=True)
         return Response(serializer.data)

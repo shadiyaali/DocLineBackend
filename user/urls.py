@@ -20,5 +20,8 @@ urlpatterns = [
     path('updateUser/<int:pk>/', views.UserUpdateView.as_view(), name='update-user'),
 
     path('getSingleUser/<int:id>/',views.getSingleUser.as_view(),name='getDoctorInHome'),
-    path('blockuser/<int:id>/',views.BlockUser.as_view(),name="blockuser") 
+    path('blockuser/<int:id>/',views.BlockUser.as_view(),name="blockuser") ,
+
+    path('getappointments/<int:id>/',views.GetAppointmentsAPIView.as_view(),name="getappointments"),
+    
 ]

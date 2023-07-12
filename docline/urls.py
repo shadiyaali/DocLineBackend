@@ -8,5 +8,12 @@ urlpatterns = [
     path('api/', include('user.urls')),
     path('api/', include('doctor.urls')),
     path('razorpay/', include('payment.urls')),
+    path("chat/", include("chat.urls")),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+
+
+

@@ -5,8 +5,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('createDoctors/', views.DoctorsCreateAPIView.as_view(), name='createDoctors'),
-    path('createDepartment/', views.CreateDepartmentView.as_view(), name='create_department'),
+   
     path('departments/', views.DepartmentListView.as_view(), name="departments"),
+    path('createDepartment/', views.CreateDepartmentView.as_view(), name='create_department'),
     path('homelistdoctor/', views.HomeListDoctor.as_view(), name="homelistdoctor"),
     path('homelistdepartment/', views.HomeListDepartment.as_view(), name="homelistdepartment"),
     path('scheduleappointment/', views.SlotCreateAPIView.as_view(), name='scheduleappointment'),

@@ -201,3 +201,11 @@ class UserUpdateView(UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+
+class GetAppointmentsAPIView(APIView):
+    def get(self, request,id):
+        current_user = User.objects.get(id=id)
+        appointments = Appointment.objects.filter(patient=current_user)
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)
