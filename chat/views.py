@@ -5,12 +5,12 @@ from .models import Room, Message
 from .serializer import RoomSerializer, MessageSerializer
 
 
-
 class RoomCreateAPIView(APIView):
     def post(self, request):
         serializer = RoomSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -82,3 +82,5 @@ class MessageDetailView(APIView):
         serializer = MessageSerializer(message)
         return Response(serializer.data)
 
+
+ 

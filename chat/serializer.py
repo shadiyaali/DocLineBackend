@@ -4,11 +4,9 @@ from .models import Room, Message
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = ('id', 'name', 'created_at','image')
+        fields = ('id', 'name', 'created_at', 'image')
 
 class MessageSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Message
         fields = ('id', 'author', 'content', 'timestamp')
-        

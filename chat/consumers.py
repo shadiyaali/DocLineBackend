@@ -34,15 +34,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 raise ValueError('Invalid message data')
 
             # Save the message to the database
-            print('junaid')
-            new_message = Message.objects.create(
-                content=message,
-                author=author,
-                room_id=room_id
-            )
+            new_message = await self.create_message(message,author,room_id)
 
-            # Broadcast the message to the room group
-            print(new_message,"hlooooo")
+            # new_message = Message.objects.create(
+            #     content=message,
+            #     author=author,
+            #     room_id=room_id
+            # )
+
+            # # Broadcast the message to the room group
+            # print(new_message,"hlooooo")
             await self.channel_layer.group_send(
                 
                 self.room_group_name,
@@ -58,9 +59,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
             error_message = {'error': str(e)}
             await self.send(text_data=json.dumps(error_message))
 
+    async def create_message(self, message, author, room_id):
+        new_message = Message.objects.create(
+           content=message,
+           author=author,
+           room_id=room_id
+         )
+        return new_message
+
     async def chat_message(self, event):
-        message = event['message']
-        author = event['author']
+        message = event.get('message')
+        author = event.get('author')
 
         # Send the message to the WebSocket
         await self.send(text_data=json.dumps({
