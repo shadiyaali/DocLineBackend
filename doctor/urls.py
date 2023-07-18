@@ -12,7 +12,11 @@ urlpatterns = [
     path('homelistdepartment/', views.HomeListDepartment.as_view(), name="homelistdepartment"),
     path('scheduleappointment/', views.SlotCreateAPIView.as_view(), name='scheduleappointment'),
     path('appointments/',views.AppointmentListAPIView.as_view(),name="appointments"),
-    path('appointments/<int:appointment_id>/', views.UpdateAppointmentStatusAPIView.as_view()),
+    path('appointmentsDoctor/<int:id>/',views. DoctorAppointmentsAPIView.as_view(), name='doctor_appointments'),
+    path('updateAppointmentStatus/<int:appointment_id>/',views.Update_appointment_status, name='update_appointment_status'),
+    path('createPresciption/',views.PrescriptionCreateAPIView.as_view(),name='createPrescription'),
+    path('usersPrescription/<int:id>/',views.GetUserPrescriptionAPIView.as_view(),name='usersPrescription'),
+   
      
     path('viewDoctorRequest/<int:id>/', views.viewDoctorRequestView.as_view(), name='viewDoctorRequest'),
     path('docorsUserSide/', views.UsersDoctorsView.as_view(), name='docorsUserSide'),
