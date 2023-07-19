@@ -61,6 +61,6 @@ class Prescription(models.Model):
     date = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.patient.username
+        return self.patient.first_name
  
      

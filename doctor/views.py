@@ -237,9 +237,9 @@ class SlotCreateAPIView(APIView):
 
             overlapping_slots = Slots.objects.filter(
                 Q(date=date) & (
-                    Q(start_time__lt=start_time, end_time__gt=start_time) |
-                    Q(start_time__lt=end_time, end_time__gt=end_time) |
-                    Q(start_time__gte=start_time, end_time__lte=end_time)
+                    Q(start_time__lte=end_time, end_time__gt=start_time) 
+                    # Q(start_time__lt=end_time, end_time__gt=end_time) |
+                    # Q(start_time__gte=start_time, end_time__lte=end_time)
                 )
             )
 
