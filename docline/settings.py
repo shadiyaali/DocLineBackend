@@ -235,7 +235,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     # "https://doc-line-frondent.vercel.app",
-    # "https://www.docline.online/",
+    "https://www.docline.online",
    "https://doc-line-frondent-te8x.vercel.app"
  ]
 CORS_ALLOW_ALL_HEADERS = True
