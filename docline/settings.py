@@ -168,7 +168,7 @@ DATABASES = {
         'NAME': 'Doc',
         'USER': 'postgres',
         'PASSWORD': '12345678',
-        'HOST': 'localhost',
+        'HOST': 'https://docline.onrender.com',
     }
 }
 
