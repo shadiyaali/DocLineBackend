@@ -185,7 +185,8 @@ class getSingleUser(APIView):
             if appointment :
                 appointment_serializer = AppointmentSerializer(appointment,many=True)
                 return Response({'appointment':appointment_serializer.data,'userDetails':serializer.data})
-            return Response(serializer.data)
+            return Response({'userDetails':serializer.data})
+            print(serializer.data)
         except User.DoesNotExist:
             return Response({'msg': 'Doctor not found'})
         except Exception as e:
