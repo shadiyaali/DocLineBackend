@@ -1,10 +1,14 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-from .models import Message
+from .models import Message, Room
 import json
+from user.models import User
+from asgiref.sync import sync_to_async
+from .serializer import MessageSerializer
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
+        print(self.room_name, "room")
         self.room_group_name = 'chat_%s' % self.room_name
 
         # Join room group
@@ -35,22 +39,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             # Save the message to the database
             new_message = await self.create_message(message,author,room_id)
-
-            # new_message = Message.objects.create(
-            #     content=message,
-            #     author=author,
-            #     room_id=room_id
-            # )
-
-            # # Broadcast the message to the room group
-            # print(new_message,"hlooooo")
+            
+            serializer = MessageSerializer(new_message)
+            print(serializer.data['content'], serializer.data['timestamp'], 'serialized')
             await self.channel_layer.group_send(
                 
                 self.room_group_name,
                 {
                     'type': 'chat_message',
-                    'message': new_message.content,
-                    'author': new_message.author
+                    'id': serializer.data['id'],
+                    'content': serializer.data['content'],
+                    'author': serializer.data['author'],
+                    'timestamp': serializer.data['timestamp']
                 }
             )
 
@@ -59,20 +59,30 @@ class ChatConsumer(AsyncWebsocketConsumer):
             error_message = {'error': str(e)}
             await self.send(text_data=json.dumps(error_message))
 
-    async def create_message(self, message, author, room_id):
+    @sync_to_async
+    def create_message(self, message, author, room_id):
+        print(self, message, author, room_id, 'data  i got')
+        user = User.objects.get(pk=author)
+        room = Room.objects.get(pk=room_id)
         new_message = Message.objects.create(
-           content=message,
-           author=author,
-           room_id=room_id
+           content = message,
+           author = user,
+           room_id = room_id
          )
+        print('new:' , new_message)
         return new_message
 
     async def chat_message(self, event):
-        message = event.get('message')
+        id = event.get('id')
+        message = event.get('content')
         author = event.get('author')
+        timestamp = event.get('timestamp')
+
 
         # Send the message to the WebSocket
         await self.send(text_data=json.dumps({
-            'message': message,
-            'author': author
+            'id': id,
+            'content': message,
+            'author': author,
+            'timestamp': timestamp
         }))

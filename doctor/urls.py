@@ -21,6 +21,7 @@ urlpatterns = [
     path('viewDoctorRequest/<int:id>/', views.viewDoctorRequestView.as_view(), name='viewDoctorRequest'),
     path('docorsUserSide/', views.UsersDoctorsView.as_view(), name='docorsUserSide'),
     path('getDoctorUser/<int:id>/', views.GetDoctorUser.as_view(), name='getDoctorUser'),
+     path('getDoctor/<int:id>/', views.GetDoctor.as_view(), name='getDoctorUser'),
     path('getSlotsUser/<int:id>/',views.GetSlotsUser.as_view(),name='getSlotsUser'),
     path('updateDepartment/<int:pk>/', views.DepartmentUpdateView.as_view(), name='update_department'),
     path('deleteDepartment/<int:pk>/',views.DepartmentDeleteView.as_view(), name='delete_department'),

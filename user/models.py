@@ -42,7 +42,7 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=100, unique=True)
     phone_number = models.CharField(max_length=50)
-    # sample = models.CharField(max_length=100, blank=True, null=True)
+     
 
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
@@ -51,7 +51,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=False)
     is_superadmin = models.BooleanField(default=False)
     image = models.ImageField(upload_to='images/', null=True,)
-    # userType =  models.CharField(max_length=50,default="user")
+   
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name','last_name','phone_number', ]

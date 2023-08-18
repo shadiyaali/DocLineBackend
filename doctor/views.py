@@ -279,6 +279,18 @@ class GetDoctorUser(APIView):
             return Response({'msg': 'Doctor not found'})
         except Exception as e:
             return Response({'msg': str(e)})
+        
+class GetDoctor(APIView):
+    def get(self,request,id):
+        try:
+            doctor = Doctors.objects.get(user_id=id)
+            print(doctor)
+            serializer = DoctorsSerializers(doctor, many=False)
+            return Response(serializer.data)
+        except Doctors.DoesNotExist:
+            return Response({'msg': 'Doctor not found'})
+        except Exception as e:
+            return Response({'msg': str(e)})        
 
 class GetSlotsUser(APIView):
     def get(self,request,id):
