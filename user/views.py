@@ -82,7 +82,7 @@ def activate(request, uidb64, token):
         user.save()
       
 
-        return HttpResponseRedirect('https://docline.onrender.com/login')
+        return HttpResponseRedirect('https://doc-line-frondent-te8x.vercel.app/login')
     
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
