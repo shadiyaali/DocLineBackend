@@ -82,7 +82,7 @@ def activate(request, uidb64, token):
         user.save()
       
 
-        return HttpResponseRedirect('https://www.docline.online/login')
+        return HttpResponseRedirect('https://docline.onrender.com/login')
     
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
