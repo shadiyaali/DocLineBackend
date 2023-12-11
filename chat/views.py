@@ -82,5 +82,4 @@ class MessageDetailView(APIView):
         serializer = MessageSerializer(message)
         return Response(serializer.data)
 
-
  

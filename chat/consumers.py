@@ -77,6 +77,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event.get('content')
         author = event.get('author')
         timestamp = event.get('timestamp')
+        
 
 
         # Send the message to the WebSocket
