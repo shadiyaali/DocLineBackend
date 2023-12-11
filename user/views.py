@@ -132,7 +132,7 @@ def resetPassword_validate(request, uidb64, token):
         user = None
     if user is not None and default_token_generator.check_token(user,token):
         request.session['uid']=uid
-        return HttpResponseRedirect('https://www.docline.online/ResetPassword')
+        return HttpResponseRedirect('https://doc-line-frondent-te8x.vercel.app/ResetPassword')
     else:
         return Response({'message':'Forgot password mail sented Success'}) 
 
@@ -149,7 +149,7 @@ class ResetPasswordView(APIView):
             user.save()
             return Response({'message': 'Password changed successfully'})
         else:
-            return HttpResponseRedirect('https://www.docline.online/ResetPassword')
+            return HttpResponseRedirect('https://doc-line-frondent-te8x.vercel.app/ResetPassword')
 
 
 class UsersListView(ListAPIView):
