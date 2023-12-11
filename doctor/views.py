@@ -35,13 +35,7 @@ class DoctorsCreateAPIView(APIView):
         serializer = PostDoctorSerializers(data=request.data)
         if serializer.is_valid():
             doctor = serializer.save()
-
-            # Send email notification to admin for approval
-            # subject = 'Doctor Approval Request'
-            # message = f'A new doctor ({doctor.user.first_name}) has been registered and requires approval.'
-            # from_email = settings.DEFAULT_FROM_EMAIL
-            # to_email = 'shadiyackn@gmail.com'
-            # send_mail(subject, message, from_email, [to_email])
+ 
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
